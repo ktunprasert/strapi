@@ -1,0 +1,35 @@
+version: '3'
+services:
+  app:
+    image: node:16-alpine
+    command: npm run develop
+    container_name: strapi
+    labels:
+      com.example.description: "Strapi project"
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_NAME: app
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: toor
+    volumes:
+      - ./app:/srv/app
+    ports:
+      - 1337:1337
+    depends_on:
+      - db
+    working_dir: /srv/app
+
+  db:
+    image: postgres:13
+    container_name: db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: toor
+    volumes:
+      - ./data:/var/lib/postgresql/data
